@@ -34,7 +34,7 @@ def home():
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
-    jinja2_env = Environment()
+    jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True)
 
     # Load custom filters
     custom_filters = get_custom_filters()
