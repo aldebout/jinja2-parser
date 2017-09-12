@@ -1,6 +1,7 @@
 from babel.dates import format_datetime, get_timezone
 import pytz
 import datetime
+from dateutil import parser
 
 def filter_leetify(a, **kw):
     """Leetify text ('a' becomes '4', 'e' becomes '3', etc.)"""
@@ -21,5 +22,5 @@ def filter_format_datetime(value, format='date', tz='Europe/Paris', locale='fr_F
     return format_datetime(value, format, tzinfo=get_timezone(tz), locale=locale)
 
 def filter_to_date(input):
-    date = datetime.datetime(input)
+    date = parser.parse(input)
     return date
