@@ -1,4 +1,4 @@
-from babel.dates import format_datetime, get_timezone
+from babel.dates import format_datetime, get_timezone, format_timedelta
 import pytz
 import datetime
 from dateutil import parser
@@ -8,7 +8,7 @@ def filter_leetify(a, **kw):
     return a.replace('a','4').replace('e','3').replace('i','1').replace('o','0').replace('u','^')
 
 
-def filter_format_datetime(value, format='date', tz='Europe/Paris', locale='fr_FR'):
+def filter_datetime(value, format='date', tz='Europe/Paris', locale='fr_FR'):
     if format == 'date':
         format="dd/MM/yyyy"
     elif format == 'timeh':
@@ -22,5 +22,7 @@ def filter_format_datetime(value, format='date', tz='Europe/Paris', locale='fr_F
     return format_datetime(value, format, tzinfo=get_timezone(tz), locale=locale)
 
 def filter_to_date(input):
-    date = parser.parse(input)
-    return date
+    return parser.parse(input)
+
+def filter_timedelta(delta, granularity='second', threshold=2, add_direction=True, format='short', locale='fr_FR'):
+    return format_timedelta(delta, granularity, threshold, add_direction, format, locale)
