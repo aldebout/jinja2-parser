@@ -24,6 +24,6 @@ def filter_datetime(value, format='date', tz='Europe/Paris', locale='fr_FR'):
 def filter_to_date(input):
     return parser.parse(input)
 
-def filter_timedelta(delta, granularity='minute', threshold=2, add_direction=False, format='short', locale='fr_FR'):
+def filter_timedelta(delta, granularity='minute', threshold=2, add_direction=False , format='short', locale='fr_FR'):
     print(format)
-    return format_timedelta(delta, granularity=granularity, threshold=threshold, add_direction=add_direction, format=format, locale=locale), format
+    return format_timedelta(delta, granularity=granularity, threshold=threshold, add_direction=add_direction, format=format, locale=locale)
