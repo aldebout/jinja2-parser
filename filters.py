@@ -1,5 +1,6 @@
 from babel.dates import format_datetime, get_timezone, format_timedelta
 import pytz
+from pytz import timezone
 import datetime
 from dateutil import parser
 
@@ -21,9 +22,11 @@ def filter_datetime(value, format='date', tz='Europe/Paris', locale='fr_FR'):
         format="dd MMMM"
     return format_datetime(value, format, tzinfo=get_timezone(tz), locale=locale)
 
-def filter_to_date(input):
-    return parser.parse(input)
+def filter_to_date(input, tzname='Europe/Paris'):
+    date = parser.parse(input)
+    if date.tzinfo == None :
+        return timezone(tzname).localize(date)
+    return date
 
 def filter_timedelta(delta, granularity='minute', threshold=2, add_direction=False , format='short', locale='fr_FR'):
-    print(format)
     return format_timedelta(delta, granularity=granularity, threshold=threshold, add_direction=add_direction, format=format, locale=locale)
