@@ -2,7 +2,7 @@
 from __future__ import absolute_import, print_function
 
 from flask import Flask, render_template, request
-from jinja2 import Environment, meta, exceptions
+from jinja2 import Environment, meta, exceptions, select_autoescape
 from random import choice
 from inspect import getmembers, isfunction
 from cgi import escape
@@ -38,7 +38,7 @@ def home():
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
-    jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True)
+    jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True, autoescape=select_autoescape(default_for_string=True, default=True))
 
     # Load custom filters
     custom_filters = get_custom_filters()
