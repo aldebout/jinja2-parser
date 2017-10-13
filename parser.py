@@ -51,7 +51,6 @@ def convert():
     except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
         return "Syntax error in jinja2 template: {0}".format(e)
 
-
     dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
         'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
     ]
@@ -83,6 +82,8 @@ def convert():
         rendered_jinja2_tpl = jinja2_tpl.render(values)
     except (ValueError, TypeError) as e:
         return "Error in your values input filed: {0}".format(e)
+    except (exceptions.UndefinedError) as e:
+        return "Error when rendering template: {0}".format(e)
 
     if bool(int(request.form['showwhitespaces'])):
         # Replace whitespaces with a visible character (will be grayed with javascript)
