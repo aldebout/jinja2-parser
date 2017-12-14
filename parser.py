@@ -65,7 +65,9 @@ def convert():
         # Check JSON for errors
         if request.form['input_type'] == "json":
             try:
+                app.logger.debug(request.form['values'])
                 values = json.loads(request.form['values'])
+                app.logger.debug(values)
             except ValueError as e:
                 return "Value error in JSON: {0}".format(e)
         # Check YAML for errors
