@@ -38,8 +38,11 @@ def filter_timedelta(delta, granularity='minute', threshold=2, add_direction=Fal
 
 def filter_b64encode(string):
     '''Encodes an utf-8 string to base64'''
-    return b64encode(bytes(string, 'utf-8'))
+    return b64encode(bytes(string, 'utf-8')).decode('UTF-8')
 
 filter_to_json = json.dumps
 
 filter_from_json = json.loads
+
+def filter_to_utf8(string):
+    return string.encode('LATIN-1').decode('UTF-8')
