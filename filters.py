@@ -36,7 +36,6 @@ def filter_datetime(value, format='date', tz='Europe/Paris', locale='fr_FR'):
 def filter_timedelta(delta, granularity='minute', threshold=2, add_direction=False , format='short', locale='fr_FR'):
     """
         Pretty prints a timedelta object (difference between two datetimes).
-        Defaults: minute, 2, False , short, fr_FR
     """
     return format_timedelta(delta, granularity=granularity, threshold=threshold, add_direction=add_direction, format=format, locale=locale)
 
