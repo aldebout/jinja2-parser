@@ -5,6 +5,7 @@ import datetime
 from dateutil import parser
 from base64 import b64encode
 import json
+import re
 
 def filter_to_date(input, tzname='Europe/Paris'):
     """
@@ -68,3 +69,19 @@ def filter_from_json( *args, **kwargs ):
         {{ ("{\\"name\\":\\"Alexandre\\"}" |from_json).name }}
     """
     return json.loads( *args, **kwargs)
+
+regex = re.compile(r'((?P<days>\d+?) days?, )?(?P<hours>\d+?):(?P<minutes>\d+?):(?P<seconds>\d+?)')
+
+def filter_to_timedelta(time_str):
+    """
+        Parses a timedelta string into a timedelta object.
+        {{ "1 day, 17:02:31" |to_timedelta |timedelta }}
+    """
+    parts = regex.match(time_str)
+    if not parts:
+        raise ValueError('Couldn\'t find a valid timedelta in string')
+    time_params = {}
+    for (name, param) in parts.groupdict().items():
+        if param:
+            time_params[name] = int(param)
+    return datetime.timedelta(**time_params)
