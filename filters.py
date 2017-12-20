@@ -66,6 +66,6 @@ def filter_from_json( *args, **kwargs ):
     """
         Loads a JSON string to a Python dict.
         Wrapper for json.loads, see official doc.
-        {{ "{\"name\":\"Alexandre\"}" |from_json }}
+        {{ ("{\\"name\\":\\"Alexandre\\"}" |from_json).name }}
     """
     return json.loads( *args, **kwargs)
