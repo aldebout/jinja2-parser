@@ -8,3 +8,4 @@ itsdangerous==0.24
 babel==2.5.0
 python-dateutil==2.6.1
 jmespath==0.9.3
+gunicorn
