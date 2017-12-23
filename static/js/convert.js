@@ -24,7 +24,7 @@ $(document).ready(function(){
 
     $('#convert-jinja').click(function() {
         var is_checked_showwhitespaces = $('input[name="showwhitespaces"]').is(':checked') ? 1:0;
-        var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked') ? 1:0;
+        var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked');
 
         console.log('Over here !');
 

@@ -27,7 +27,7 @@
                 </div>
                 <div id="settings">
                     <label><input type="checkbox" name="showwhitespaces" /> Show whitespaces</label><br/>
-                    <label><input type="checkbox" name="simulatesafe" checked="checked" /> Safe comme sur BOS (pas implémenté)</label>
+                    <label><input type="checkbox" name="simulatesafe" checked="checked" /> Safe comme sur BOS (pas encore désactivable)</label>
                     <p>
                         <label><input type="radio" name="use_case" value="jinja" checked="checked"/> Jinja seul</label>
                         <label><input type="radio" name="use_case" value="jmespath"/> Jinja + JMESPath</label>
@@ -46,7 +46,7 @@
                 <div id="jinja-render" class="render"></div>
             </div>
         </div>
-        <div class="jmespath-class">
+        <div class="jmespath-class row">
             <div class="col-md-6" >
                 <h1>JMESPath Values</h1>
                 <textarea id="jmespath-values" class="values"></textarea>
@@ -56,12 +56,20 @@
                 <div id="jmespath-render" class="render"></div>
             </div>
         </div>
-        <div>
+        <div class="row">
             <div class="col-md-6">
-                <h1>Custom Filters</h1>
+                <h1>Custom Filters - Jinja</h1>
                 <ul>
-                {% for f_name, f_func in custom_filters.items() %}
-                    <li><b>{{ f_name }}</b> {{f_func.__code__.co_varnames |safe}}, defaults: {{f_func.__defaults__ |safe}}:{{ (f_func.__doc__ )[:300] |replace('\n', '<br/>') |safe}}</li>
+                {% for f_name, f_func in jinja_custom_filters.items() %}
+                    <li style="margin: 6px 0"><b>{{ f_name }}</b> {{f_func.__code__.co_varnames |safe}}, defaults: {{f_func.__defaults__ |safe}}:{{ (f_func.__doc__ )[:300] |replace('\n', '<br/>') |safe}}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h1>Custom Functions - JMESPath</h1>
+                <ul>
+                {% for f_name, f_func in jmespath_custom_filters.items() %}
+                    <li style="margin: 6px 0"><b>{{ f_name }} (</b>{{f_func.signature |map(attribute='types') |map('join','/') |join(', ') |safe }}<b>)</b>: {{ (f_func.__doc__ ) |replace('\n', '<br/>') |safe if f_func.__doc__ is defined }}</li>
                 {% endfor %}
                 </ul>
             </div>

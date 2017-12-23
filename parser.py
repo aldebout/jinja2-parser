@@ -16,33 +16,42 @@ from babel.dates import format_datetime, get_timezone
 import pytz
 from dateutil import parser
 import jmespath
+from custom_jmespath import CustomFunctions
 
 
 app = Flask(__name__)
 
+options = jmespath.Options(custom_functions=CustomFunctions())
 
-def get_custom_filters():
+def get_jinja_custom_filters():
     import filters
     custom_filters = {}
     for m in getmembers(filters):
         if m[0].startswith('filter_') and isfunction(m[1]):
             filter_name = m[0][7:]
             custom_filters[filter_name] = m[1]
+    return custom_filters
 
+def get_jmespath_custom_filters():
+    custom_filters = {}
+    for m in [x for x in getmembers(CustomFunctions) if x[0].startswith('_func_') and isfunction(x[1]) and x[1].__module__ == 'custom_jmespath']:
+        filter_name = m[0][6:]
+        custom_filters[filter_name] = m[1]
     return custom_filters
 
 
 @app.route("/")
 def home():
-    return render_template('index.html', custom_filters=get_custom_filters())
+    return render_template('index.html', jinja_custom_filters=get_jinja_custom_filters(), jmespath_custom_filters=get_jmespath_custom_filters())
 
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
-    jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True, autoescape=select_autoescape(default_for_string=True, default=True))
-
+    jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True, autoescape=request.form['simulatesafe'])
+    app.logger.debug('Simulate safe is '+request.form['simulatesafe'])
+    app.logger.debug('Env autoescape is '+jinja2_env.autoescape)
     # Load custom jinja filters
-    custom_filters = get_custom_filters()
+    custom_filters = get_jinja_custom_filters()
     app.logger.debug('Add the following customer filters to Jinja environment: %s' % ', '.join(custom_filters.keys()))
     jinja2_env.filters.update(custom_filters)
 
@@ -77,9 +86,9 @@ def convert():
         return json.dumps({'jinja':"Error when rendering template: {0}".format(e), 'jmespath':'An error was raised somewhere else.'})
 
     try:
-        jmespath_result = json.dumps(jmespath.search(escape(rendered_jinja2_tpl).replace('\n', ''), jmespath_values))
-    except:
-        jmespath_result = "JMESPath extraction failed."
+        jmespath_result = json.dumps(jmespath.search(escape(rendered_jinja2_tpl).replace('\n', ''), jmespath_values, options=options))
+    except (jmespath.exceptions.JMESPathError) as e:
+        jmespath_result = format(e)
 
     if bool(int(request.form['showwhitespaces'])):
         # Replace whitespaces with a visible character (will be grayed with javascript)
