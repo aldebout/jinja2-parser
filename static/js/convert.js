@@ -1,32 +1,46 @@
 $(document).ready(function(){
     $('#clear').click(function() {
-        $('#template').val('');
-        $('#render').val('');
-        $('#values').val('');
-        $('#render').html('');
+        $('#jinja-template').val('');
+        $('#jinja-render').val('');
+        $('#jinja-values').val('');
+        $('#jinja-render').html('');
+        $('#jmespath-render').val('');
+        $('#jmespath-render').html('');
     });
 
-    $('#convert').click(function() {
-        var is_checked_showwhitespaces = $('input[name="showwhitespaces"]').is(':checked') ? 1:0;
-        var is_checked_dummyvalues = $('input[name="dummyvalues"]').is(':checked') ? 1:0;
-        var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked') ? 1:0;
-        var input_type = $('input[name="input_type"]:checked').val();
+    $('#settings-btn').click(function() {
+        $('#settings').toggle();
+    });
 
+    $('input[type=radio][name="use_case"]').change(function() {
+        if ( this.value === "jinja" ) {
+            $('#jinja-render-title').html("Render");
+            $('.jmespath-class').hide();
+        } else if ( this.value === "jmespath" ) {
+            $('#jinja-render-title').html("JMESPath query");
+            $('.jmespath-class').show();
+        }
+    });
+
+    $('#convert-jinja').click(function() {
+        var is_checked_showwhitespaces = $('input[name="showwhitespaces"]').is(':checked') ? 1:0;
+        var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked') ? 1:0;
+
+        console.log('Over here !');
 
         // Push the input to the Jinja2 api (Python)
         $.post('/convert', {
-            template: $('#template').val(),
-            values: $('#values').val(),
-            input_type: input_type,
+            jinja_template: $('#jinja-template').val(),
+            jinja_values: $('#jinja-values').val(),
+            jmespath_values: $('#jmespath-values').val(),
             showwhitespaces: is_checked_showwhitespaces,
-            dummyvalues: is_checked_dummyvalues,
             simulatesafe: is_checked_simulatesafe
         }).done(function(response) {
-            // Grey out the white spaces chars if any
-            response = response.replace(/•/g, '<span class="whitespace">•</span>');
-
             // Display the answer
-            $('#render').html(response);
+            console.log('I got something !');
+            var response_object = JSON.parse(response);
+            $('#jinja-render').html(response_object.jinja.replace(/•/g, '<span class="whitespace">•</span>'));
+            $('#jmespath-render').html(response_object.jmespath.replace(/•/g, '<span class="whitespace">•</span>'));
         });
     });
 });

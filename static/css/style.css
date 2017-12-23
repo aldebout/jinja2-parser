@@ -1,15 +1,18 @@
-#template,
-#render,
-#values {
+.values,
+.render {
     width: 100%;
-    min-height: 300px;
+    min-height: 200px;
     resize: vertical;
     font-family: "Courier New", Courier, monospace;
     border: 1px solid #ccc;
 }
 
-#render {
+.render {
     background: #eee;
+}
+
+.jmespath-class {
+	display: none;
 }
 
 span.whitespace {

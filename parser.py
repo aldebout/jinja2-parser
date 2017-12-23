@@ -15,6 +15,7 @@ import datetime
 from babel.dates import format_datetime, get_timezone
 import pytz
 from dateutil import parser
+import jmespath
 
 
 app = Flask(__name__)
@@ -40,58 +41,52 @@ def home():
 def convert():
     jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True, autoescape=select_autoescape(default_for_string=True, default=True))
 
-    # Load custom filters
+    # Load custom jinja filters
     custom_filters = get_custom_filters()
     app.logger.debug('Add the following customer filters to Jinja environment: %s' % ', '.join(custom_filters.keys()))
     jinja2_env.filters.update(custom_filters)
 
-    # Load the template
+    # Load the jinja template
     try:
-        jinja2_tpl = jinja2_env.from_string(request.form['template'])
+        jinja2_tpl = jinja2_env.from_string(request.form['jinja_template'])
     except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
-        return "Syntax error in jinja2 template: {0}".format(e)
+        return json.dumps({'jinja':"Syntax error in jinja2 template: {0}".format(e), 'jmespath':'An error was raised somewhere else.'})
 
-    dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
-        'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
-    ]
-    values = {}
-    if bool(int(request.form['dummyvalues'])):
-        # List template variables (introspection)
-        vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(request.form['template']))
-
-        for v in vars_to_fill:
-            values[v] = choice(dummy_values)
-    else:
-        # Check JSON for errors
-        if request.form['input_type'] == "json":
-            try:
-                app.logger.debug(request.form['values'])
-                values = json.loads(request.form['values'])
-                app.logger.debug(values)
-            except ValueError as e:
-                return "Value error in JSON: {0}".format(e)
-        # Check YAML for errors
-        elif request.form['input_type'] == "yaml":
-            try:
-                values = yaml.load(request.form['values'])
-            except (ValueError, yaml.parser.ParserError, TypeError) as e:
-                return "Value error in YAML: {0}".format(e)
+    # Load values
+    try:
+        if request.form['jinja_values'] != "":
+            jinja_values = json.loads(request.form['jinja_values'])
         else:
-            return "Undefined input_type: {0}".format(request.form['input_type'])
+            jinja_values = {}
+    except (ValueError) as e:
+        return json.dumps({'jinja':'Error in JSON: {0}'.format(e), 'jmespath':'An error was raised somewhere else.'})
+    try:
+        if request.form['jmespath_values'] != "":
+            jmespath_values = json.loads(request.form['jmespath_values'])
+        else:
+            jmespath_values = {}
+    except (ValueError) as e:
+        return json.dumps({'jinja':'An error was raised somewhere else.', 'jmespath':'Error in JSON: {0}'.format(e)})
 
     # If ve have empty var array or other errors we need to catch it and show
     try:
-        rendered_jinja2_tpl = jinja2_tpl.render(values)
+        rendered_jinja2_tpl = jinja2_tpl.render(jinja_values)
     except (ValueError, TypeError) as e:
-        return "Error in your values input filed: {0}".format(e)
+        return json.dumps({'jinja':"Error in your values input filed: {0}".format(e), 'jmespath':'An error was raised somewhere else.'})
     except (exceptions.UndefinedError, AttributeError) as e:
-        return "Error when rendering template: {0}".format(e)
+        return json.dumps({'jinja':"Error when rendering template: {0}".format(e), 'jmespath':'An error was raised somewhere else.'})
+
+    try:
+        jmespath_result = json.dumps(jmespath.search(escape(rendered_jinja2_tpl).replace('\n', ''), jmespath_values))
+    except:
+        jmespath_result = "JMESPath extraction failed."
 
     if bool(int(request.form['showwhitespaces'])):
         # Replace whitespaces with a visible character (will be grayed with javascript)
         rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
 
-    return escape(rendered_jinja2_tpl).replace('\n', '<br />')
+    return json.dumps({'jinja':escape(rendered_jinja2_tpl).replace('\n', '<br />'), 'jmespath':jmespath_result})
+
 
 
 if __name__ == "__main__":
