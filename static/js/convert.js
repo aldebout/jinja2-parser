@@ -9,16 +9,16 @@ $(document).ready(function(){
     });
 
     $('#settings-btn').click(function() {
-        $('#settings').toggle();
+        $('#settings').toggle(200);
     });
 
     $('input[type=radio][name="use_case"]').change(function() {
         if ( this.value === "jinja" ) {
             $('#jinja-render-title').html("Render");
-            $('.jmespath-class').hide();
+            $('.jmespath-class').hide(200);
         } else if ( this.value === "jmespath" ) {
             $('#jinja-render-title').html("JMESPath query");
-            $('.jmespath-class').show();
+            $('.jmespath-class').show(200).attr("style", "display: flex");
         }
     });
 

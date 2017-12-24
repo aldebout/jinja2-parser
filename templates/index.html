@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
     <script src="{{ url_for('static', filename='js/convert.js') }}"></script>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Jinja live parser</title>
 </head>
 
 <body>
-    <form class="container-fluid">
+    <form class="container-fluid" id="bootstrap-override">
         <div class="row">
             <div class="col-md-8">
                 <h1>Template</h1>
                 <textarea id="jinja-template" class="values">{% include 'example_template.html' %}</textarea>
             </div>
-            <div class="col-md-4">
-                <div>
-                    <input type="button" class="btn btn-success" id="convert-jinja" value="Convert" />
-                </div>  
-                <div>
-                    <input type="button" class="btn btn-danger" id="clear" value="Clear" />
-                    <input type="button" class="btn" id="settings-btn" value="Settings" />
+            <div class="col-md-4" style="margin-top:3%;">
+                <div class="btn-group-vertical btn-block">
+                    <input type="button" class="btn btn-success"  id="convert-jinja" value="Convert" />
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-outline-primary active"><input type="radio" name="use_case" value="jinja" checked/> Jinja seul</label>
+                        <label class="btn btn-outline-primary"><input type="radio" name="use_case" value="jmespath"/> Jinja + JMESPath</label>
+                    </div>
+                    <div  class="btn-group">
+                        <input type="button" class="btn btn-danger" id="clear" value="Clear" />
+                        <input type="button" class="btn btn-secondary" id="settings-btn" value="Settings" />
+                    </div>
                 </div>
-                <div id="settings">
-                    <label><input type="checkbox" name="showwhitespaces" /> Show whitespaces</label><br/>
-                    <label><input type="checkbox" name="simulatesafe" checked="checked" /> Safe comme sur BOS (pas encore désactivable)</label>
-                    <p>
-                        <label><input type="radio" name="use_case" value="jinja" checked="checked"/> Jinja seul</label>
-                        <label><input type="radio" name="use_case" value="jmespath"/> Jinja + JMESPath</label>
-                    </p>
+                <div id="settings" style="margin-top: 10px; margin-left: 10px;">
+                    <div class="form-check">
+                        <label class="form-check-label"><input type="checkbox" class="form-check-input" name="showwhitespaces" /> Show whitespaces</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label"><input type="checkbox" class="form-check-input" name="simulatesafe" checked="checked" /> Safe comme sur BOS (pas encore désactivable)</label>
+                    </div>
                 </div>
             </div>
         </div>

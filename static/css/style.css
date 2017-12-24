@@ -21,4 +21,9 @@ span.whitespace {
 
 label {
     font-weight: normal;
+    margin-bottom: initial;
+}
+
+#bootstrap-override .btn{
+	box-shadow: none;
 }
