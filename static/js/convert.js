@@ -26,8 +26,6 @@ $(document).ready(function(){
         var is_checked_showwhitespaces = $('input[name="showwhitespaces"]').is(':checked') ? 1:0;
         var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked');
 
-        console.log('Over here !');
-
         // Push the input to the Jinja2 api (Python)
         $.post('/convert', {
             jinja_template: $('#jinja-template').val(),
@@ -37,7 +35,6 @@ $(document).ready(function(){
             simulatesafe: is_checked_simulatesafe
         }).done(function(response) {
             // Display the answer
-            console.log('I got something !');
             var response_object = JSON.parse(response);
             $('#jinja-render').html(response_object.jinja.replace(/•/g, '<span class="whitespace">•</span>'));
             $('#jmespath-render').html(response_object.jmespath.replace(/•/g, '<span class="whitespace">•</span>'));
