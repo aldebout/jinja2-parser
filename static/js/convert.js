@@ -22,7 +22,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#convert-jinja').click(function() {
+    $('#convert').click(function() {
         var is_checked_showwhitespaces = $('input[name="showwhitespaces"]').is(':checked') ? 1:0;
         var is_checked_simulatesafe = $('input[name="simulatesafe"]').is(':checked');
 
@@ -37,7 +37,7 @@ $(document).ready(function(){
             // Display the answer
             var response_object = JSON.parse(response);
             $('#jinja-render').html(response_object.jinja.replace(/•/g, '<span class="whitespace">•</span>'));
-            $('#jmespath-render').html(response_object.jmespath.replace(/•/g, '<span class="whitespace">•</span>'));
+            $('#jmespath-render').text(JSON.stringify(JSON.parse(response_object.jmespath), null, 2));
         });
     });
 });

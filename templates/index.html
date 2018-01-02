@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-4" style="margin-top:3vw;">
                 <div class="btn-group-vertical btn-block">
-                    <input type="button" class="btn btn-success"  id="convert-jinja" value="Convert" />
+                    <input type="button" class="btn btn-success"  id="convert" value="Convert" />
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-outline-primary active"><input type="radio" name="use_case" value="jinja" checked/> Jinja seul</label>
                         <label class="btn btn-outline-primary"><input type="radio" name="use_case" value="jmespath"/> Jinja + JMESPath</label>
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-6" >
                 <h1 id="jmespath-render-title" >Extraction Results</h1>
-                <div id="jmespath-render" class="render"></div>
+                <pre id="jmespath-render" class="render"></pre>
             </div>
         </div>
         <div class="row">
