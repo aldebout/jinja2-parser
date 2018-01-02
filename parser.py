@@ -86,8 +86,9 @@ def convert():
         return json.dumps({'jinja':"Error when rendering template: {0}".format(e), 'jmespath':'An error was raised somewhere else.'})
 
     try:
-        jmespath_result = json.dumps(jmespath.search(escape(rendered_jinja2_tpl).replace('\n', ''), jmespath_values, options=options))
+        jmespath_result = json.dumps(jmespath.search(rendered_jinja2_tpl.replace('\n', ''), jmespath_values, options=options))
     except (jmespath.exceptions.JMESPathError) as e:
+        app.logger.debug(e, exc_info = True)
         jmespath_result = format(e)
 
     if bool(int(request.form['showwhitespaces'])):
