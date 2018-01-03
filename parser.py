@@ -50,6 +50,7 @@ def convert():
     jinja2_env = Environment(trim_blocks=True,lstrip_blocks=True, autoescape=request.form['simulatesafe'])
     app.logger.debug('Simulate safe is '+request.form['simulatesafe'])
     app.logger.debug('Env autoescape is '+jinja2_env.autoescape)
+    jmespath_result = "None"
     # Load custom jinja filters
     custom_filters = get_jinja_custom_filters()
     app.logger.debug('Add the following customer filters to Jinja environment: %s' % ', '.join(custom_filters.keys()))
