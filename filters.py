@@ -85,3 +85,9 @@ def filter_to_timedelta(time_str):
         if param:
             time_params[name] = int(param)
     return datetime.timedelta(**time_params)
+
+def filter_regex_replace(string, regex, replace):
+    """
+        Searches and substitutes inside a string with a regex.
+    """
+    return re.sub(regex, replace, string)
